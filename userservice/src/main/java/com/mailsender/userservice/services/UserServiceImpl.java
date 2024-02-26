@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final ConfirmationRepository confirmationRepository;
+    private final   EmailService emailService;
 
 
     @Override
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService{
 
         Confirmation confirmation = new Confirmation(user);
         confirmationRepository.save(confirmation);
+        emailService.sendSimpleMailMessage(user.getName(),user.getEmail(),confirmation.getToken());
 
         return user;
 
