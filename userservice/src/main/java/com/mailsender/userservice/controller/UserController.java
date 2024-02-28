@@ -3,6 +3,7 @@ package com.mailsender.userservice.controller;
 import com.mailsender.userservice.data.models.HttpResponse;
 import com.mailsender.userservice.data.models.User;
 import com.mailsender.userservice.services.UserService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ import java.net.URL;
 public class UserController {
     private  final UserService userService;
 
-    @PostMapping("/createUser")
-    public ResponseEntity<HttpResponse> createUser(@RequestBody User user) {
+    @PostMapping
+    public ResponseEntity<HttpResponse> createUser(@RequestBody User user) throws MessagingException {
         User newUser = userService.saveUser(user);
         return ResponseEntity.created(URI.create("")).body(
                 HttpResponse.builder()
@@ -35,7 +36,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/createUser")
+    @GetMapping
     public ResponseEntity<HttpResponse> confirmUserAccount(@RequestParam("token") String token) {
         Boolean isSuccess = userService.verifyToken(token);
 

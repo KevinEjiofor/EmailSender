@@ -4,6 +4,7 @@ import com.mailsender.userservice.data.models.Confirmation;
 import com.mailsender.userservice.data.models.User;
 import com.mailsender.userservice.data.repository.ConfirmationRepository;
 import com.mailsender.userservice.data.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(User user) throws MessagingException {
         if (userRepository.existsByEmail(user.getEmail())){throw new RuntimeException("Email already exists");
         }
         user.setEnabled(false);
@@ -24,7 +25,10 @@ public class UserServiceImpl implements UserService{
 
         Confirmation confirmation = new Confirmation(user);
         confirmationRepository.save(confirmation);
-        emailService.sendSimpleMailMessage(user.getName(),user.getEmail(),confirmation.getToken());
+//        emailService.sendSimpleMailMessage(user.getName(),user.getEmail(),confirmation.getToken());
+//        emailService.sendSimpleMailWithAttachments(user.getName(),user.getEmail(),confirmation.getToken());<
+//        emailService.sendSimpleMailWithEmbeddedImage(user.getName(),user.getEmail(),confirmation.getToken());
+        emailService.sendHtmlMail(user.getName(),user.getEmail(),confirmation.getToken());
 
         return user;
 
